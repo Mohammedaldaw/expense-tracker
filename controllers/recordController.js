@@ -141,9 +141,9 @@ const recordController = {
       let remaining = budget + totalExpense
       let budgetAmount = [spent, remaining]
 
-      // Format total amount
-      ;[totalAmount, totalExpense, totalRevenue, formattedBudget, remaining] =
-        formatAmount(totalAmount, totalExpense, totalRevenue, budget, remaining)
+        // Format total amount
+        ;[totalAmount, totalExpense, totalRevenue, formattedBudget, remaining] =
+          formatAmount(totalAmount, totalExpense, totalRevenue, budget, remaining)
 
       // data for pagination
       const totalPage = Array.from({ length: pages }).map(
@@ -160,6 +160,29 @@ const recordController = {
       }
       if ((selectedCategory || selectedDate) && !records.length) {
         noFilterResult = true
+      }
+
+      // ─── BUDGET WARNING ───
+      {
+        const start = moment().startOf('month').toDate()
+        const end = moment().endOf('month').toDate()
+
+        // sum this month’s outflows/inflows
+        const agg = await Record.aggregate([
+          { $match: { userId: req.user._id, date: { $gte: start, $lte: end } } },
+          { $group: { _id: null, sum: { $sum: '$amount' } } }
+        ])
+        const totalThisMonth = agg[0]?.sum || 0
+
+        let warning = null
+        if (req.user.budget > 0) {
+          if (totalThisMonth >= req.user.budget) warning = 'exceeded'
+          else if (totalThisMonth >= 0.8 * req.user.budget) warning = 'near'
+        }
+
+        // expose to template
+        res.locals.totalThisMonth = totalThisMonth
+        res.locals.warning = warning
       }
 
       return res.render(page, {
@@ -190,6 +213,8 @@ const recordController = {
         filterDate,
         totalRecords,
         formattedBudget,
+        totalThisMonth: res.locals.totalThisMonth,
+        warning:        res.locals.warning,
         budget,
         remaining
       })
