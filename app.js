@@ -1,36 +1,25 @@
 // Require packages
 const express = require('express')
 const session = require('express-session')
-const redis = require('redis')
-const client =
-  process.env.NODE_ENV === 'production'
-    ? redis.createClient(
-        `redis://${process.env.REDIS_ENDPOINT_URI.replace(
-          /^(redis\:\/\/)/,
-          ''
-        )}`,
-        { password: process.env.REDIS_PASSWORD }
-      )
-    : redis.createClient()
-const redisStore = require('connect-redis')(session)
 const exphbs = require('express-handlebars')
-
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
+
+// Load .env in dev
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
+// Config & helpers
 const routes = require('./routes')
-
 const usePassport = require('./config/passport')
 require('./config/mongoose')
 require('./utils/handlebars-helper')
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 const app = express()
 
-// Set up template engine
+// Set up Handlebars
 app.engine(
   'hbs',
   exphbs({
@@ -40,18 +29,9 @@ app.engine(
 )
 app.set('view engine', 'hbs')
 
-// Handle session
-client.on('connect', function (err) {
-  if (err) {
-    console.log('Could not establish a connection with Redis. ' + err)
-  } else {
-    console.log('Connected to Redis successfully!')
-  }
-})
-
+// Session (in-memory store)
 app.use(
   session({
-    store: new redisStore({ client }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -63,23 +43,23 @@ app.use(
   })
 )
 
-// Set up body-parser
+// Body parsing
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Set up method-override
+// Method override for PUT/DELETE
 app.use(methodOverride('_method'))
 
-// Set up static file
+// Static files
 app.use(express.static('public'))
 
-// Call passport function
+// Passport initialize
 usePassport(app)
 
-// Use flash
+// Flash messages
 app.use(flash())
 
-// Add response local variables scoped to the request
+// Make auth & flash vars available in all views
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
@@ -89,10 +69,10 @@ app.use((req, res, next) => {
   next()
 })
 
-// Direct request to routes/index.js
+// Routes
 app.use(routes)
 
-// Start and listen on the Express server
+// Start server
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`)
 })

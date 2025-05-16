@@ -55,17 +55,23 @@ module.exports = {
 
     return amountByCategory
   },
-  organizeCategoryData(categoryList, amountByCategory) {
-    const categoryObject = Object.assign(
-      ...categoryList.map(category => ({
-        [category.name]: amountByCategory[category._id] || 0
-      }))
-    )
+  organizeCategoryData(categoryList = [], amountByCategory = {}) {
+    // build an array of { categoryName: amount } objects
+    const mapping = categoryList.map(category => ({
+      [category.name]: amountByCategory[category._id] || 0
+    }))
+  
+    // merge them all onto a fresh object
+    const categoryObject = Object.assign({}, ...mapping)
+  
+    // then annotate your list if you need to
     categoryList.forEach(category => {
       category.amount = categoryObject[category.name]
     })
+  
     return categoryObject
-  },
+  }
+  ,
   formatAmount(...amount) {
     return amount.map(el => new Intl.NumberFormat().format(el))
   }
