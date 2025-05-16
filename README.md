@@ -25,6 +25,8 @@ After login, users can:
 - View total amount of expenses/revenues/balance
 - View expenses break down by category and month in chart visualizations
 - View monthly spent and remaining budget in pie chart
+- **NEW: Budget Warning Banner**  
+  - Displays an alert at the top of your dashboard when you’re **near** (≥ 80%) or have **exceeded** (≥ 100%) your monthly budget  
 - Filter expenses by category and month
 - Filter revenues by month
 - Add an expense and a revenue
