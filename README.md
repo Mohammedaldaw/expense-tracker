@@ -19,8 +19,8 @@ monthly budget setting, and alerts when a user is near or exceeds their budget.
 * View total amounts: income, expenses, balance
 * Filter by category and month
 * **NEW: Budget Warning Banner**
-
   * Shows alert when spending hits 80% or exceeds 100% of budget
+  *To meet the ES6 requirement, we implemented the Budget Warning logic using a dedicated ES6 class, encapsulating all calculations and thresholds.*
 * CRUD on expenses, revenues, budget, profile
 * Responsive UI with Bootstrap
 
