@@ -1,7 +1,7 @@
 // Require Record and Category model
 const Record = require('../models/record')
 const Category = require('../models/category')
-
+const BudgetService = require('../services/BudgetService');
 // Require other packages
 const moment = require('moment')
 
@@ -162,27 +162,26 @@ const recordController = {
         noFilterResult = true
       }
 
-      // ─── BUDGET WARNING ───
+      // ─── BUDGET WARNING implemented using ES6 Class───
+
       {
-        const start = moment().startOf('month').toDate()
-        const end = moment().endOf('month').toDate()
+        const budgetService = new BudgetService(req.user._id, req.user.budget);
+        const { warning, totalExpenses: totalThisMonth } = await budgetService.checkBudget();
 
-        // sum this month’s outflows/inflows
-        const agg = await Record.aggregate([
-          { $match: { userId: req.user._id, date: { $gte: start, $lte: end } } },
-          { $group: { _id: null, sum: { $sum: '$amount' } } }
-        ])
-        const totalThisMonth = agg[0]?.sum || 0
+        res.locals.totalThisMonth = totalThisMonth;
+        res.locals.warning = warning;
+      }
 
-        let warning = null
-        if (req.user.budget > 0) {
-          if (totalThisMonth >= req.user.budget) warning = 'exceeded'
-          else if (totalThisMonth >= 0.8 * req.user.budget) warning = 'near'
-        }
+      try {
+        const budgetService = new BudgetService(req.user._id, req.user.budget);
+        const { warning, totalExpenses: totalThisMonth } = await budgetService.checkBudget();
 
-        // expose to template
-        res.locals.totalThisMonth = totalThisMonth
-        res.locals.warning = warning
+        res.locals.totalThisMonth = totalThisMonth;
+        res.locals.warning = warning;
+      } catch (err) {
+        console.error('Budget warning error:', err);
+        res.locals.totalThisMonth = 0;
+        res.locals.warning = null;
       }
 
       return res.render(page, {
