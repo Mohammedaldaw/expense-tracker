@@ -2,36 +2,29 @@
 
 ![expense-tracker](/public/photos/expense-tracker.gif)
 
-Expense Tracker is a simple RESTful web application built with Node.js, Express, and mongoDB for users to track daily expenses.
+## Overview
 
-This project is Live on: https://sleepy-cliffs-84117.herokuapp.com/
+Expense Tracker is a full-stack web application where users can manage daily income and expenses. 
+It allows user registration, third-party login (Google/Facebook), CRUD operations on financial records, 
+monthly budget setting, and alerts when a user is near or exceeds their budget.
 
-You can use the default accounts below, register an account, or use your Facebook/Google account to login.
 
-```
-email: user1@example.com/user2@example.com
-password: 12345678
-```
+
+---
 
 ## Features
 
-- Sign up for an account by providing name, email, and password
-- Log in with email, Facebook, or Google account
-- Log out of an account
+* User registration and login (email, Facebook, Google)
+* View all expenses/revenues
+* View total amounts: income, expenses, balance
+* Filter by category and month
+* **NEW: Budget Warning Banner**
 
-After login, users can:
+  * Shows alert when spending hits 80% or exceeds 100% of budget
+* CRUD on expenses, revenues, budget, profile
+* Responsive UI with Bootstrap
 
-- View all expenses/revenues
-- View total amount of expenses/revenues/balance
-- View expenses break down by category and month in chart visualizations
-- View monthly spent and remaining budget in pie chart
-- **NEW: Budget Warning Banner**  
-  - Displays an alert at the top of your dashboard when you’re **near** (≥ 80%) or have **exceeded** (≥ 100%) your monthly budget  
-- Filter expenses by category and month
-- Filter revenues by month
-- Add an expense and a revenue
-- Edit their expense, revenue, budget, avatar, and name
-- Delete an expense and a revenue
+---
 
 ![RWD](/public/photos/expense-tracker-RWD.gif)
 ![Home page](/public/photos/index.png)
@@ -39,6 +32,46 @@ After login, users can:
 ![Register page](/public/photos/register-new.png)
 ![Expenses page](/public/photos/expenses.png)
 ![Revenues page](/public/photos/revenues.png)
+
+---
+
+## Technologies Used
+
+* Node.js
+* Express.js
+* MongoDB + Mongoose
+* Handlebars.js
+* Bootstrap 4
+* Passport.js (Local, Facebook, Google)
+* Multer (for avatar uploads)
+* Moment.js
+* Redis (for session storage)
+
+---
+
+## Team Members
+
+* Mohammed Al-Dawood (Project Lead / Backend)
+* Abdullah Al-Hemddi (UI / Frontend Integration)
+* Mohammad Al-Hemddi (Testing & Documentation)
+
+---
+
+## Future Work
+
+* Export financial data to Excel or PDF
+* Email alerts for exceeded budget
+
+---
+
+## Resources
+
+* [MongoDB Docs](https://www.mongodb.com/docs/)
+* [Passport.js Docs](http://www.passportjs.org/)
+* [Bootstrap](https://getbootstrap.com/)
+* [Moment.js](https://momentjs.com/)
+
+---
 
 ## Prerequisites
 
@@ -49,10 +82,11 @@ After login, users can:
 
 ## Install Expense Tracker
 
-#### Clone the repository locally
+#### Clone the repository
 
-```
-$ git clone https://github.com/ivyhungtw/expense-tracker.git
+```bash
+git clone https://github.com/Mohammedaldaw/expense-tracker.git
+cd expense-tracker
 ```
 
 #### Install project dependencies
@@ -64,18 +98,17 @@ $ npm install
 
 #### Add .env file
 
-To properly use the app and Facebook login feature, make sure you have filled out the following information in .env file.
-
-You can get your own Facebook id and secret on [Facebook Developers](https://developers.facebook.com/).
+Copy the example environment configuration:
 
 ```
-FACEBOOK_ID=<Your Facebook app ID>
-FACEBOOK_SECRET=<Your Facebook app secret>
-FACEBOOK_CALLBACK=http://localhost:3000/auth/facebook/callback
-SESSION_SECRET=ThisIsMySecret
-MONGODB_URI=mongodb://localhost/todo-list
-PORT=3000
+cp .env.example .env
 ```
+
+---
+Optional
+You can get your own Facebook ID and secret on [Facebook Developers](https://developers.facebook.com/).
+You can get your Google Client ID and secret on [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
+
 
 ## Use Expense Tracker
 
@@ -99,6 +132,12 @@ or just run:
 
 ```
 $ node app.js
+```
+
+You can use the default accounts below, register an account, or use your Facebook/Google account to login.
+```
+email: user1@example.com/user2@example.com
+password: 12345678
 ```
 
 The server will start running on http://localhost:3000/
