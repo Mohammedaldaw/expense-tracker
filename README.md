@@ -9,7 +9,8 @@ It allows user registration, third-party login (Google/Facebook), CRUD operation
 monthly budget setting, and alerts when a user is near or exceeds their budget.
 
 
-
+# System Flowchart
+[Click here to view the flowchart](https://prnt.sc/jnWKwXjv-Apw)
 ---
 
 ## Features
