@@ -52,9 +52,9 @@ monthly budget setting, and alerts when a user is near or exceeds their budget.
 
 ## Team Members
 
-* Mohammed Al-Dawood (Project Lead / Backend)
-* Abdullah Al-Hemddi (UI / Frontend Integration)
-* Mohammad Al-Hemddi (Testing & Documentation)
+* Mohammed Al-Dawood 
+* Abdullah Al-Hemddi
+* Mohammad Al-Hemddi 
 
 ---
 
